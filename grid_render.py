@@ -1,6 +1,6 @@
 import struct
 
-with open("oddstr13-1-delta.grid", "rb") as fh:
+with open("delta.grid", "rb") as fh:
     data = fh.read()
 
 grid_size, grid_radius =  struct.unpack("<Bf", data[0:5])
