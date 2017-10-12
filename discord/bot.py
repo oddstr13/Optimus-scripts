@@ -59,7 +59,7 @@ async def on_message_delete(message):
 
 def main(args=[]):
     with open("TOKEN") as fh:
-        client.run(fh.read())
+        client.run(fh.read().strip())
 
 if __name__ == "__main__":
     import sys
