@@ -1,3 +1,10 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#
+# Copyright © Odd Stråbø <oddstr13@openshell.no> 2017
+# License: MIT - https://opensource.org/licenses/MIT
+#
+
 import struct
 import io
 

@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#
+# Copyright © Odd Stråbø <oddstr13@openshell.no> 2017
+# License: MIT - https://opensource.org/licenses/MIT
+#
+
 __doc__ = "A Discord bot for the Optimus 3D printer"
 import logging
 
