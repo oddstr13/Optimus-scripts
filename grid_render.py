@@ -33,8 +33,8 @@ greyscale = [x*255 for x in scaled]
 #print(scaled)
 #print(makegrid(greyscale, grid_size))
 
+
 from PIL import Image, ImagePalette, ImageColor
-import numpy
 
 #palette_r = ['#ffffff','#fffffc','#fffff9','#fffff6','#fffff3','#fffff0','#ffffed','#ffffea','#ffffe7','#ffffe4','#ffffe1','#ffffde','#ffffdb','#ffffd8','#ffffd5','#ffffd2','#ffffcf','#ffffcc','#ffffc9','#ffffc6','#ffffc2','#ffffbf','#ffffbc','#ffffb9','#ffffb6','#ffffb3','#ffffb0','#ffffad','#ffffaa','#ffffa7','#ffffa3','#ffffa0','#ffff9d','#ffff9a','#ffff97','#ffff93','#ffff90','#ffff8d','#ffff8a','#ffff86','#ffff83','#ffff80','#ffff7c','#ffff79','#ffff75','#ffff72','#ffff6e','#ffff6a','#ffff67','#ffff63','#ffff5f','#ffff5b','#ffff57','#ffff52','#ffff4e','#ffff49','#ffff45','#ffff3f','#ffff3a','#ffff34','#ffff2d','#ffff26','#ffff1d','#ffff10','#fffe00','#fffb00','#fff900','#fff600','#fff300','#fff000','#ffed00','#ffea00','#ffe700','#ffe500','#ffe200','#ffdf00','#ffdc00','#ffd900','#ffd600','#ffd300','#ffd000','#ffcd00','#ffcb00','#ffc800','#ffc500','#ffc200','#ffbf00','#ffbc00','#ffb900','#ffb600','#ffb300','#ffb000','#ffad00','#ffaa00','#ffa700','#ffa300','#ffa000','#ff9d00','#ff9a00','#ff9700','#ff9400','#ff9000','#ff8d00','#ff8a00','#ff8600','#ff8300','#ff8000','#ff7c00','#ff7900','#ff7500','#ff7100','#ff6e00','#ff6a00','#ff6600','#ff6200','#ff5e00','#ff5a00','#ff5500','#ff5100','#ff4c00','#ff4700','#ff4200','#ff3c00','#ff3600','#ff2e00','#ff2600','#ff1c00','#ff0c00','#fe0005','#fd000f','#fc0016','#fa001c','#f90021','#f80026','#f6002b','#f5002f','#f30033','#f20037','#f0003b','#ef003f','#ed0043','#ec0047','#ea004a','#e9004e','#e70052','#e50055','#e40059','#e2005c','#e00060','#de0064','#dd0067','#db006b','#d9006e','#d70072','#d50075','#d30079','#d1007c','#cf0080','#cd0084','#ca0087','#c8008b','#c6008e','#c30092','#c10096','#be0099','#bc009d','#b900a0','#b600a4','#b300a8','#b000ab','#ad00af','#aa00b3','#a600b6','#a300ba','#9f00be','#9c00c1','#9800c5','#9300c9','#8f00cd','#8a00d0','#8500d4','#8000d8','#7b00dc','#7500df','#6e00e3','#6700e7','#5f00eb','#5600ef','#4c00f2','#3f00f6','#2f00fa','#1100fe','#0401fc','#0902f7','#0e03f3','#1105ee','#1406ea','#1607e5','#1808e1','#1a09dc','#1c0ad8','#1d0ad4','#1e0bcf','#1f0ccb','#200dc7','#210dc2','#220ebe','#230eba','#230eb5','#240fb1','#240fad','#2410a9','#2510a5','#2510a1','#25109c','#251098','#251194','#251190','#25118c','#251188','#251184','#251180','#25117c','#241178','#241174','#241170','#23116c','#231168','#221165','#221161','#21115d','#211059','#201056','#201052','#1f104e','#1e104b','#1d1047','#1d0f43','#1c0f40','#1b0f3c','#1a0e39','#190e35','#190d32','#180d2e','#170c2b','#160b28','#160a25','#140821','#13071e','#11061b','#0f0518','#0c0415','#090311','#06020c','#030106','#000000']
 # http://gka.github.io/palettes/#colors=#fff,#0f0,#f00,#00f,#000|steps=256|bez=0|coL=0
@@ -47,6 +47,7 @@ palette = ImagePalette.ImagePalette(palette=[x[0] for x in palette_x] + [x[1] fo
 im_b = bytes([round(x) for x in greyscale])
 im = Image.frombytes(mode='P', data=im_b, size=(grid_size,)*2)
 #print(im.palette)
+oimg = im.copy()
 
 im.resize((grid_size*16,)*2).save("output-greyscale.png")
 
@@ -57,6 +58,5 @@ im.resize((grid_size*16,)*2).save("output-palette.png")
 
 #im.putpalette(palette)
 #im = Image.frombytes(mode='L', data=b'abcd', size=(2,2))
-im = im.resize((grid_size*10,)*2)
-im.show()
-im.save("output.png")
+im.resize((grid_size*16,)*2).show()
+oimg.show()

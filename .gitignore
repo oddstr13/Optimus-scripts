@@ -1,2 +1,5 @@
 output*.png
 *-delta.grid
+discord/TOKEN
+discord/discord.log
+*.pyc
