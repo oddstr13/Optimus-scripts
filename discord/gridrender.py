@@ -26,6 +26,7 @@ _palette_x = [ImageColor.getrgb(x) for x in _palette_r]
 palette = ImagePalette.ImagePalette(palette=[x[0] for x in _palette_x] + [x[1] for x in _palette_x] + [x[2] for x in _palette_x])
 
 def renderPalette(pal):
+    """Returns a image rendering of the palette."""
     pal_b = pal.tobytes() # RRR... GGG... BBB...
     R = pal_b[0:256]
     G = pal_b[256:-256]
@@ -37,22 +38,21 @@ def renderPalette(pal):
     return im
 
 def filterGridCircle(points, n, radius):
-    res = points.copy()
+    """Returns points inside circle. Points outside are set to NaN."""
+    # Code ported from
     # https://github.com/Smoothieware/Smoothieware/blob/c398f3aa9d2bd6ac2c9328ef0bc08429788d6203/src/modules/tools/zprobe/DeltaGridStrategy.cpp
+
+    res = points.copy()
     d = ((radius * 2) / (n - 1))
     for c in range(n):
         y = -radius + d * c
         for  r in range(n):
             x = -radius + d * r
-            # Avoid probing the corners (outside the round or hexagon print surface) on a delta printer.
+
             distance_from_center = (x * x + y * y)**0.5 # sqrt
-            #print((d,c,r,x,y))
-            #print((n,c*n,c*n+r))
             if not distance_from_center <= radius:
                 res[c*n+r] = float("NaN")
-        
-        #stream->printf("\n");
-    #return true
+    
     return res
 
 
@@ -62,6 +62,7 @@ def render(data, use_palette=True, pixelsize=None, background=(0,0,0,127)):
     points = list(struct.unpack("<{}f".format(grid_size**2), data[5:]))
     fpoints = filterGridCircle(points, grid_size, grid_radius)
 
+    # Determine highest and lowest correction point
     cpoints = [p for p in fpoints if not math.isnan(p)]
     lowest = min(cpoints)
     highest = max(cpoints)
@@ -74,36 +75,44 @@ def render(data, use_palette=True, pixelsize=None, background=(0,0,0,127)):
     scaled = [(x+offset)/scale for x in points]
     clamped = [min(max(0,x),1) for x in scaled]
 
+    # Create image from point data
     greyscale = [x*255 for x in clamped]
+
     im_b = bytes([round(x) for x in greyscale])
+
     im = Image.frombytes(mode='P', data=im_b, size=(grid_size,)*2)
 
     if use_palette:
         im.putpalette(palette)
     
+    # Remove points outside the circle
     im = im.convert("RGBA")
     for n, p in enumerate(fpoints):
         xy = divmod(n, grid_size)
         if math.isnan(p):
             im.putpixel(xy, background)
 
-    im = im.transpose(Image.FLIP_TOP_BOTTOM) # Flip X
+    # Flip X
+    im = im.transpose(Image.FLIP_TOP_BOTTOM)
 
+    # Scale grid up
     if not pixelsize:
         pixelsize = 270 // grid_size
     
     rim = im.resize((grid_size * pixelsize,)*2)
 
+    # New image with space for the grid, scale and labels.
     fim = Image.new("RGBA", (340, 286), background)
-
     fim.paste(rim, (8, (fim.height - rim.height)//2))
 
+    # Add palette scale
     pim = renderPalette(palette).resize((16,256))
     
     pimhpos = (fim.height - pim.height) // 2
     pimwpos = fim.width - pim.width - 8
     fim.paste(pim, (pimwpos, pimhpos))
 
+    # Draw text labels
     fdr = ImageDraw.Draw(fim)
     font = fdr.getfont()
 
