@@ -7,6 +7,7 @@
 
 __doc__ = "A Discord bot for the Optimus 3D printer"
 import logging
+import io
 
 import requests
 
@@ -45,8 +46,12 @@ async def on_message(message):
 
             with requests.get(att.get('url')) as rq:
                 im = render(rq.content)
+            
+            imfile = io.BytesIO()
+            im.save(imfile, format="PNG")
+            imfile.seek(0)
 
-            filelist[message.id] = await client.send_file(message.channel, im, filename="delta.png")
+            filelist[message.id] = await client.send_file(message.channel, imfile, filename="delta.png")
 
 @client.event
 async def on_message_delete(message):
